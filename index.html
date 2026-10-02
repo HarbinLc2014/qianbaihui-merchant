@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://ahfgjdiltzatewzipicl.supabase.co; img-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <title>千百惠 · 商家订单台</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div><span class="brand">千百惠</span><span class="brand-detail">商家订单台</span></div>
+    <div id="account-bar" hidden><span id="account-name"></span><button id="logout" class="quiet" type="button">退出登录</button></div>
+  </header>
+  <main>
+    <section id="login-panel" class="login-panel">
+      <p class="eyebrow">门店工作台</p>
+      <h1>登录，处理门店订单</h1>
+      <p class="muted">使用现有员工账号。手机号沿用员工 App 的登录方式，也可直接输入邮箱。</p>
+      <form id="login-form" method="post">
+        <label>员工手机号或邮箱<input id="login-account" name="username" autocomplete="username" required maxlength="254" inputmode="email" disabled></label>
+        <label>密码<input id="login-password" name="password" type="password" autocomplete="current-password" required maxlength="256" disabled></label>
+        <button id="login-button" type="submit" disabled>登录订单台</button>
+      </form>
+      <p class="muted small">仅已获门店权限的账号可以查看和处理订单。使用共用设备后请退出登录。</p>
+      <noscript><p class="error">请启用 JavaScript 后登录。密码不会通过普通页面表单提交。</p></noscript>
+    </section>
+    <section id="workspace" hidden>
+      <div class="workspace-heading"><div><p class="eyebrow">门店工作台</p><h1>订单与履约</h1><p class="muted">线下预订单 · 收款与退款由门店实际办理</p></div><button id="refresh" class="secondary" type="button">刷新订单</button></div>
+      <div id="summary" class="summary"></div>
+      <form id="filters" class="filters">
+        <label>订单状态<select id="status-filter"><option value="">全部订单</option><option value="submitted">待确认</option><option value="awaiting_payment">待收款</option><option value="paid">待发货</option><option value="shipping">已发货</option><option value="completed">已完成</option><option value="refund_requested">售后申请</option><option value="cancelled">已取消</option><option value="refunded">已退款</option></select></label>
+        <label class="search-label">搜索<input id="keyword" type="search" placeholder="订单号、收货人或联系电话" maxlength="100"></label>
+        <button type="submit" class="secondary">查询</button>
+      </form>
+      <p id="list-note" class="muted small"></p>
+      <div id="orders" class="orders"></div>
+      <p id="empty-state" class="empty" hidden>没有符合条件的订单。</p>
+    </section>
+    <p id="notice" role="status" aria-live="polite" class="notice" hidden></p>
+  </main>
+  <dialog id="confirm-dialog">
+    <form id="confirm-form">
+      <h2 id="confirm-title"></h2><p id="confirm-message"></p>
+      <label id="restock-label" class="checkbox" hidden><input id="restock" type="checkbox" checked>商品已退回或无需发货，将商品回补库存</label>
+      <label id="acknowledge-label" class="checkbox" hidden><input id="acknowledge" type="checkbox">我已核对订单，并已实际完成上述收款或退款</label>
+      <p id="confirm-error" class="error" role="alert" hidden></p>
+      <div class="dialog-actions"><button id="close-confirm" type="button" class="secondary">返回</button><button id="confirm-submit" type="submit">确定</button></div>
+    </form>
+  </dialog>
+</body>
+</html>
