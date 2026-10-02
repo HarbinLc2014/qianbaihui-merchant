@@ -12,7 +12,7 @@ export function normalizeAccount(value) {
 
 const STORAGE_KEY = 'qianbaihui.merchant.session.v1';
 export class MerchantApi {
-  constructor({ url, anonKey, storage, fetchImpl = fetch, now = () => Date.now() }) {
+  constructor({ url, anonKey, storage, fetchImpl = (...args) => globalThis.fetch(...args), now = () => Date.now() }) {
     if (!/^https:\/\//.test(url)) throw new Error('订单服务必须使用 HTTPS');
     this.url = url.replace(/\/$/, ''); this.anonKey = anonKey;
     this.storage = storage; this.fetch = fetchImpl; this.now = now;
