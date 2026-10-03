@@ -1,6 +1,6 @@
 import { CONFIG } from './config.mjs';
 import { MerchantApi } from './api.mjs';
-import { STATUS_LABELS, money, availableActions, actionPrompt, appendText } from './orders.mjs';
+import { STATUS_LABELS, money, availableActions, actionPrompt, appendText, confirmedAmount } from './orders.mjs';
 
 const $ = id => document.getElementById(id);
 const state = { busy:false, orders:[], pending:null };
@@ -83,6 +83,9 @@ function openConfirmation(order, action, extra) {
   const prompt = actionPrompt(order,action);
   state.pending = {order,action,extra,prompt};
   $('confirm-title').textContent = prompt.title; $('confirm-message').textContent = prompt.message;
+  $('payable-label').hidden = action !== 'confirm';
+  $('payable-amount').required = action === 'confirm';
+  $('payable-amount').value = Number(order.payableAmount ?? order.totalAmount ?? 0).toFixed(2);
   $('restock-label').hidden = !prompt.offersRestock; $('restock').checked = order.status === 'paid';
   $('acknowledge-label').hidden = !prompt.requiresAcknowledgement; $('acknowledge').checked = false;
   $('confirm-error').hidden = true; $('confirm-submit').textContent = ACTION_LABELS[action];
@@ -120,6 +123,13 @@ $('confirm-dialog').addEventListener('cancel', () => { state.pending = null; });
 $('confirm-form').addEventListener('submit', async event => {
   event.preventDefault(); if (state.busy || !state.pending) return;
   const pending = state.pending;
+  if (pending.action === 'confirm') {
+    try { pending.extra.payableAmount = confirmedAmount($('payable-amount').value); }
+    catch (error) {
+      $('confirm-error').textContent = error.message; $('confirm-error').hidden = false;
+      $('payable-amount').focus(); return;
+    }
+  }
   if (pending.prompt.requiresAcknowledgement && !$('acknowledge').checked) {
     $('confirm-error').textContent = '请先确认已经实际完成收款或退款'; $('confirm-error').hidden = false; return;
   }

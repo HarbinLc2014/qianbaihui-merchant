@@ -1,6 +1,14 @@
 export const STATUS_LABELS = {submitted:'待确认',pending_payment:'待确认',awaiting_payment:'待收款',payment_pending:'支付确认中',paid:'待发货',shipping:'已发货',completed:'已完成',cancelled:'已取消',refund_requested:'售后申请',refunded:'已退款'};
 export const money = value => `¥${Number(value || 0).toFixed(2)}`;
 
+export function confirmedAmount(value) {
+  const text = String(value ?? '').trim();
+  if (!/^\d+(?:\.\d{1,2})?$/.test(text) || Number(text) > 1000000) {
+    throw new Error('请填写有效的最终应付金额，最多两位小数');
+  }
+  return Number(text);
+}
+
 export function availableActions(order) {
   const actions = [];
   if (['submitted','pending_payment'].includes(order.status)) actions.push('confirm');

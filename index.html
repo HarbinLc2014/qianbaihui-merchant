@@ -45,6 +45,7 @@
   <dialog id="confirm-dialog">
     <form id="confirm-form">
       <h2 id="confirm-title"></h2><p id="confirm-message"></p>
+      <label id="payable-label" hidden>最终应付金额（元）<input id="payable-amount" type="number" min="0" max="1000000" step="0.01" inputmode="decimal"></label>
       <label id="restock-label" class="checkbox" hidden><input id="restock" type="checkbox" checked>商品已退回或无需发货，将商品回补库存</label>
       <label id="acknowledge-label" class="checkbox" hidden><input id="acknowledge" type="checkbox">我已核对订单，并已实际完成上述收款或退款</label>
       <p id="confirm-error" class="error" role="alert" hidden></p>
